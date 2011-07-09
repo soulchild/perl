@@ -1644,6 +1644,7 @@ cpan/Module-Build/t/mymeta.t
 cpan/Module-Build/t/new_from_context.t
 cpan/Module-Build/t/notes.t
 cpan/Module-Build/t/parents.t
+cpan/Module-Build/t/par.t
 cpan/Module-Build/t/perl_mb_opt.t
 cpan/Module-Build/t/PL_files.t
 cpan/Module-Build/t/pod_parser.t
@@ -1660,6 +1661,7 @@ cpan/Module-Build/t/resume.t
 cpan/Module-Build/t/runthrough.t
 cpan/Module-Build/t/sample.t
 cpan/Module-Build/t/script_dist.t
+cpan/Module-Build/t/signature.t
 cpan/Module-Build/t/test_file_exts.t
 cpan/Module-Build/t/test_types.t
 cpan/Module-Build/t/test_type.t

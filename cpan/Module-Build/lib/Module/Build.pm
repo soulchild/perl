@@ -16,7 +16,7 @@ use Module::Build::Base;
 
 use vars qw($VERSION @ISA);
 @ISA = qw(Module::Build::Base);
-$VERSION = '0.3800';
+$VERSION = '0.39_01';
 $VERSION = eval $VERSION;
 
 
@@ -114,32 +114,14 @@ This illustrates initial configuration and the running of three
 'actions'.  In this case the actions run are 'build' (the default
 action), 'test', and 'install'.  Other actions defined so far include:
 
-  build                          manifest
-  clean                          manifest_skip
-  code                           manpages
-  config_data                    pardist
-  diff                           ppd
-  dist                           ppmdist
-  distcheck                      prereq_data
-  distclean                      prereq_report
-  distdir                        pure_install
-  distinstall                    realclean
-  distmeta                       retest
-  distsign                       skipcheck
-  disttest                       test
-  docs                           testall
-  fakeinstall                    testcover
-  help                           testdb
-  html                           testpod
-  install                        testpodcoverage
-  installdeps                    versioninstall
+<action_list>
 
 You can run the 'help' action for a complete list of actions.
 
 
 =head1 GUIDE TO DOCUMENTATION
 
-The documentation for C<Module::Build> is broken up into three sections:
+The documentation for C<Module::Build> is broken up into sections:
 
 =over
 
