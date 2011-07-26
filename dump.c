@@ -691,16 +691,25 @@ S_sequence(pTHX_ register const OP *o)
  	return;
 #endif
 
+    /* XXX PL_op_sequence/Sequence isn't threadsafe!! */
     if (!Sequence)
 	Sequence = newHV();
 
     for (; o; o = o->op_next) {
 	STRLEN len;
-	SV * const op = newSVuv(PTR2UV(o));
-	const char * const key = SvPV_const(op, len);
+	SV * op;
+	const char * key;
 
-	if (hv_exists(Sequence, key, len))
+	if (oldop == o)
+	    break; /* whoops, a loop */
+
+	op = newSVuv(PTR2UV(o));
+	key = SvPV_const(op, len);
+
+	if (hv_exists(Sequence, key, len)) {
+	    SvREFCNT_dec(op);
 	    break;
+	}
 
 	switch (o->op_type) {
 	case OP_STUB:
@@ -711,18 +720,24 @@ S_sequence(pTHX_ register const OP *o)
 	    goto nothin;
 	case OP_NULL:
 #ifdef PERL_MAD
-	    if (o == o->op_next)
+	    if (o == o->op_next) {
+		SvREFCNT_dec(op);
 		return;
+	    }
 #endif
-	    if (oldop && o->op_next)
+	    if (oldop && o->op_next) {
+		SvREFCNT_dec(op);
 		continue;
+	    }
 	    break;
 	case OP_SCALAR:
 	case OP_LINESEQ:
 	case OP_SCOPE:
 	  nothin:
-	    if (oldop && o->op_next)
+	    if (oldop && o->op_next) {
+		SvREFCNT_dec(op);
 		continue;
+	    }
 	    (void)hv_store(Sequence, key, len, newSVuv(++PL_op_seq), 0);
 	    break;
 
@@ -762,6 +777,7 @@ S_sequence(pTHX_ register const OP *o)
 	    (void)hv_store(Sequence, key, len, newSVuv(++PL_op_seq), 0);
 	    break;
 	}
+	SvREFCNT_dec(op);
 	oldop = o;
     }
 }
