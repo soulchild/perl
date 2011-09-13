@@ -3730,8 +3730,10 @@ S_intuit_method(pTHX_ char *start, GV *gv, CV *cv)
     PERL_ARGS_ASSERT_INTUIT_METHOD;
 
     if (gv) {
-	if (SvTYPE(gv) == SVt_PVGV && GvIO(gv))
-	    return 0;
+	if (SvTYPE(gv) == SVt_PVGV && GvIO(gv)) {
+	assert(isGV_with_GP(gv));
+
+	    return 0;}
 	if (cv) {
 	    if (SvPOK(cv)) {
 		const char *proto = SvPVX_const(cv);

@@ -362,7 +362,9 @@ S_gv_init_sv(pTHX_ GV *gv, const svtype sv_type)
     case SVt_NULL:
     case SVt_PVCV:
     case SVt_PVFM:
+	break;
     case SVt_PVGV:
+	assert(isGV_with_GP(gv));
 	break;
     default:
 	if(GvSVn(gv)) {
@@ -1257,6 +1259,7 @@ Perl_gv_fetchpvn_flags(pTHX_ const char *nambeg, STRLEN full_len, I32 flags,
     }
     else gv = *gvp;
     if (SvTYPE(gv) == SVt_PVGV) {
+	assert(isGV_with_GP(gv));
 	if (add) {
 	    GvMULTI_on(gv);
 	    gv_init_sv(gv, sv_type);

@@ -995,6 +995,7 @@ PP(pp_undef)
 	}
 	break;
     case SVt_PVGV:
+	assert(isGV_with_GP(sv));
 	if (SvFAKE(sv)) {
 	    SvSetMagicSV(sv, &PL_sv_undef);
 	    break;

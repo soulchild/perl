@@ -1024,6 +1024,7 @@ Perl_leave_scope(pTHX_ I32 base)
 		   add one in this code:
 		   
 		   if (SvTYPE(gv) == SVt_PVGV) {
+	assert(isGV_with_GP(gv));
 		       if (add) {
 		       GvMULTI_on(gv);
 		       gv_init_sv(gv, sv_type);

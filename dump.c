@@ -1557,6 +1557,7 @@ Perl_do_sv_dump(pTHX_ I32 level, PerlIO *file, SV *sv, I32 nest, I32 maxnest, bo
 	append_flags(d, flags, hv_flags_names);
 	break;
     case SVt_PVGV:
+	assert(isGV_with_GP(sv));
     case SVt_PVLV:
 	if (isGV_with_GP(sv)) {
 	    append_flags(d, GvFLAGS(sv), gp_flags_names);
@@ -2016,6 +2017,7 @@ Perl_do_sv_dump(pTHX_ I32 level, PerlIO *file, SV *sv, I32 nest, I32 maxnest, bo
 	break;
 
     case SVt_PVGV:
+	assert(isGV_with_GP(sv));
     case SVt_PVLV:
 	if (type == SVt_PVLV) {
 	    Perl_dump_indent(aTHX_ level, file, "  TYPE = %c\n", LvTYPE(sv));
@@ -2734,6 +2736,7 @@ Perl_sv_xmlpeek(pTHX_ SV *sv)
 	    sv_catpv(t, " CV=\"()\"");
 	goto finish;
     case SVt_PVGV:
+	assert(isGV_with_GP(sv));
 	sv_catpv(t, " GV=\"");
 	break;
     case SVt_BIND:

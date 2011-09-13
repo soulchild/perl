@@ -1541,6 +1541,7 @@ PerlIO_layer_from_ref(pTHX_ SV *sv)
     case SVt_PVCV:
 	return PerlIO_find_layer(aTHX_ STR_WITH_LEN("Code"), 0);
     case SVt_PVGV:
+	assert(isGV_with_GP(sv));
 	return PerlIO_find_layer(aTHX_ STR_WITH_LEN("Glob"), 0);
     default:
 	return NULL;

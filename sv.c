@@ -1559,6 +1559,7 @@ Perl_sv_setiv(pTHX_ register SV *const sv, const IV i)
 	break;
 
     case SVt_PVGV:
+	assert(isGV_with_GP(sv));
 	if (!isGV_with_GP(sv))
 	    break;
     case SVt_PVAV:
@@ -1669,6 +1670,7 @@ Perl_sv_setnv(pTHX_ register SV *const sv, const NV num)
 	break;
 
     case SVt_PVGV:
+	assert(isGV_with_GP(sv));
 	if (!isGV_with_GP(sv))
 	    break;
     case SVt_PVAV:
@@ -3696,6 +3698,8 @@ S_glob_assign_glob(pTHX_ SV *const dstr, SV *const sstr, const int dtype)
     /* We don’t need to check the name of the destination if it was not a
        glob to begin with. */
     if(dtype == SVt_PVGV) {
+	assert(isGV_with_GP(dstr));
+      {
         const char * const name = GvNAME((const GV *)dstr);
         if(
             strEQ(name,"ISA")
@@ -3720,6 +3724,7 @@ S_glob_assign_glob(pTHX_ SV *const dstr, SV *const sstr, const int dtype)
                     );
             }
         }
+      }
     }
 
     gp_free(MUTABLE_GV(dstr));
@@ -3993,6 +3998,7 @@ Perl_sv_setsv_flags(pTHX_ SV *dstr, register SV* sstr, const I32 flags)
 		sv_upgrade(dstr, SVt_PVIV);
 		break;
 	    case SVt_PVGV:
+	assert(isGV_with_GP(dstr));
 	    case SVt_PVLV:
 		goto end_of_first_switch;
 	    }
@@ -4025,6 +4031,7 @@ Perl_sv_setsv_flags(pTHX_ SV *dstr, register SV* sstr, const I32 flags)
 		sv_upgrade(dstr, SVt_PVNV);
 		break;
 	    case SVt_PVGV:
+	assert(isGV_with_GP(dstr));
 	    case SVt_PVLV:
 		goto end_of_first_switch;
 	    }
@@ -4076,8 +4083,9 @@ Perl_sv_setsv_flags(pTHX_ SV *dstr, register SV* sstr, const I32 flags)
 	break;
 
 	/* case SVt_BIND: */
-    case SVt_PVLV:
     case SVt_PVGV:
+	assert(isGV_with_GP(sstr));
+    case SVt_PVLV:
     case SVt_PVMG:
 	if (SvGMAGICAL(sstr) && (flags & SV_GMAGIC)) {
 	    mg_get(sstr);
@@ -6050,6 +6058,7 @@ Perl_sv_clear(pTHX_ SV *const orig_sv)
 	    else if (LvTYPE(sv) != 't') /* unless tie: unrefcnted fake SV**  */
 		SvREFCNT_dec(LvTARG(sv));
 	case SVt_PVGV:
+	if (type == SVt_PVGV)assert(isGV_with_GP(sv));
 	    if (isGV_with_GP(sv)) {
 		if(GvCVu((const GV *)sv) && (stash = GvSTASH(MUTABLE_GV(sv)))
 		   && HvENAME_get(stash))
@@ -8777,6 +8786,7 @@ Perl_sv_2io(pTHX_ SV *const sv)
 	io = MUTABLE_IO(sv);
 	break;
     case SVt_PVGV:
+	assert(isGV_with_GP(sv));
     case SVt_PVLV:
 	if (isGV_with_GP(sv)) {
 	    gv = MUTABLE_GV(sv);
@@ -8838,6 +8848,7 @@ Perl_sv_2cv(pTHX_ SV *sv, HV **const st, GV **const gvp, const I32 lref)
 	*gvp = NULL;
 	return NULL;
     case SVt_PVGV:
+	assert(isGV_with_GP(sv));
 	if (isGV_with_GP(sv)) {
 	    gv = MUTABLE_GV(sv);
 	    *gvp = gv;
@@ -9094,7 +9105,9 @@ Perl_sv_reftype(pTHX_ const SV *const sv, const int ob)
 	case SVt_PVAV:		return "ARRAY";
 	case SVt_PVHV:		return "HASH";
 	case SVt_PVCV:		return "CODE";
-	case SVt_PVGV:		return (char *) (isGV_with_GP(sv)
+	case SVt_PVGV:
+	assert(isGV_with_GP(sv));
+		return (char *) (isGV_with_GP(sv)
 				    ? "GLOB" : "SCALAR");
 	case SVt_PVFM:		return "FORMAT";
 	case SVt_PVIO:		return "IO";
@@ -11768,6 +11781,7 @@ S_sv_dup_common(pTHX_ const SV *const sstr, CLONE_PARAMS *const param)
 		break;
 
 	    case SVt_PVGV:
+	assert(isGV_with_GP(sstr));
 	    case SVt_PVIO:
 	    case SVt_PVFM:
 	    case SVt_PVHV:
